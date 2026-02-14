@@ -1,6 +1,7 @@
 const TOTAL_TIME_SECONDS = 60;
 const ALPHABET_START_CODE = 65;
 const ALPHABET_SIZE = 26;
+const WRONG_HIGHLIGHT_MS = 300;
 
 const homeScreen = document.getElementById("homeScreen");
 const gameScreen = document.getElementById("gameScreen");
@@ -23,6 +24,8 @@ let correctCount = 0;
 let incorrectCount = 0;
 let timerId = null;
 let currentAnswer = null;
+let questionLocked = false;
+let gameActive = false;
 
 function showScreen(screenToShow) {
   [homeScreen, gameScreen, resultScreen].forEach((screen) => {
@@ -52,7 +55,16 @@ function updateScoreboard() {
   incorrectCountEl.textContent = String(incorrectCount);
 }
 
+function disableOptionButtons() {
+  const buttons = optionsEl.querySelectorAll(".optionBtn");
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+
 function renderQuestion() {
+  questionLocked = false;
+
   const { letter, value } = randomLetterData();
   currentAnswer = value;
   letterBoxEl.textContent = letter;
@@ -66,13 +78,31 @@ function renderQuestion() {
     button.textContent = String(optionValue);
     button.type = "button";
     button.addEventListener("click", () => {
+      if (questionLocked || !gameActive) {
+        return;
+      }
+
+      questionLocked = true;
+      disableOptionButtons();
+
       if (optionValue === currentAnswer) {
         correctCount += 1;
-      } else {
-        incorrectCount += 1;
+        updateScoreboard();
+        if (gameActive) {
+          renderQuestion();
+        }
+        return;
       }
+
+      incorrectCount += 1;
+      button.classList.add("wrong");
       updateScoreboard();
-      renderQuestion();
+
+      setTimeout(() => {
+        if (gameActive) {
+          renderQuestion();
+        }
+      }, WRONG_HIGHLIGHT_MS);
     });
     optionsEl.appendChild(button);
   });
@@ -81,6 +111,8 @@ function renderQuestion() {
 function endGame() {
   clearInterval(timerId);
   timerId = null;
+  gameActive = false;
+  questionLocked = true;
 
   finalCorrectEl.textContent = String(correctCount);
   finalIncorrectEl.textContent = String(incorrectCount);
@@ -92,6 +124,8 @@ function startGame() {
   timeLeft = TOTAL_TIME_SECONDS;
   correctCount = 0;
   incorrectCount = 0;
+  gameActive = true;
+  questionLocked = false;
 
   updateScoreboard();
   renderQuestion();

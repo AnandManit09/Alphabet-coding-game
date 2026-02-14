@@ -136,6 +136,16 @@ p {
   color: var(--accent);
 }
 
+.optionBtn.wrong {
+  background: #fee2e2;
+  border-color: var(--bad);
+  color: var(--bad);
+}
+
+.optionBtn:disabled {
+  cursor: not-allowed;
+}
+
 .resultLine {
   font-size: 1.1rem;
   margin: 10px 0;
