@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alphabet Coding Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section id="homeScreen" class="screen active">
+      <h1>Alphabet Coding Game</h1>
+      <p>Pick the correct number code for the shown letter (A=1, B=2 ... Z=26).</p>
+      <button id="startBtn" class="btn">Start Game</button>
+    </section>
+
+    <section id="gameScreen" class="screen" aria-live="polite">
+      <header class="topbar">
+        <div class="chip">Time: <span id="timeLeft">60</span>s</div>
+        <div class="chip success">Correct: <span id="correctCount">0</span></div>
+        <div class="chip danger">Incorrect: <span id="incorrectCount">0</span></div>
+      </header>
+
+      <div class="questionCard">
+        <p class="label">Find the code for letter</p>
+        <div id="letterBox" class="letter">A</div>
+      </div>
+
+      <div id="options" class="options"></div>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <h2>Time's Up</h2>
+      <p class="resultLine">Correct Answers: <span id="finalCorrect">0</span></p>
+      <p class="resultLine">Incorrect Answers: <span id="finalIncorrect">0</span></p>
+      <button id="playAgainBtn" class="btn">Play Again</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
